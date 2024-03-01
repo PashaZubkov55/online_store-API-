@@ -4,6 +4,8 @@ const cors = require('cors')
 const sequelize = require('./db')
 const models = require('./models//models')
 const router = require('./routes/index')
+const errorHandler = require('./middleware/ErrorHandlingmiddleware')
+
 
 const port = process.env.PORT || 4000
 
@@ -11,6 +13,10 @@ const port = process.env.PORT || 4000
 const app = express()
 app.use(cors())
 app.use(express.json())
+
+
+//обработчик ошибок должен бытьпоследним
+app.use(errorHandler)
 
 app.use('/api', router)
 
