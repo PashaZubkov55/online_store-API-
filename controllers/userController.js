@@ -12,7 +12,7 @@ class UserController{
      if (!id) {
        return next(apiError.badRequest('Не задан ID'))
      }
-     res.json(id)
+      return res.json(id)
 
     }
 }

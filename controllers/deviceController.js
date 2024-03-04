@@ -1,13 +1,36 @@
+const uuid = require('uuid')
+const path = require('path')
+const{Device} = require('../models/models')
+const ApiError = require('../error/ApiError')
 class DeviceController{
-    getAll = (req, res)=>{
-
+   async getAll  (req, res){
+        const device = await Device.findAll()
+        return res.json(device)
    }
 
-   create = (req, res)=>{
+ async  create  (req, res,next){
+    try {
+        const {name, price, brandId, typeId , info} = req.body
+    //передача изображение
+     const {img} = req.files
+     const fileName = uuid.v4() + '.jpg'
+     img.mv(path.resolve(__dirname,'..','static', fileName)) //перемещение файла в нужную папку
+     
+     const divice = await Device.create({name, price, brandId, typeId , img: fileName})
+     
+     return res.json(divice)
+
+    } catch (err) {
+        next(ApiError.badRequest(err.message))
+    }
+
+    
+
+
 
    }
-   getDevice= (req, res)=>{
+  async getDevice(req, res){
 
    }
 }
-module.export = new BrandController()
+module.exports = new DeviceController()
