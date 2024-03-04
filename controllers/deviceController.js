@@ -4,11 +4,28 @@ const{Device} = require('../models/models')
 const ApiError = require('../error/ApiError')
 class DeviceController{
    async getAll  (req, res){
-        const device = await Device.findAll()
-        return res.json(device)
-   }
+      const {brandId, typeId  } = req.query 
+      let divices;
+      if (!brandId && !typeId) {
+        divices = await Device.findAll()
+      }
 
- async  create  (req, res,next){
+      if (brandId && !typeId) {
+        divices = await Device.findAll({where: {brandId}})
+      }
+      if (!brandId && typeId) {
+        divices = await Device.findAll({where: {typeId}})
+         
+      }
+     
+      if (brandId && typeId) {
+        divices = await Device.findAll({where: {brandId ,typeId}})
+         
+      }
+      return res.json(divices)
+   }    
+
+ async  create(req, res,next){
     try {
         const {name, price, brandId, typeId , info} = req.body
     //передача изображение
