@@ -31,16 +31,25 @@ class UserController{
          return res.json({token})
     };
 
-   async login  (req, res){
+   async login  (req, res, next){
+    const {email, password} = req.body
+    const user = await User.findOne({where:{email}})
+    if (!user) {
+      return next(apiError.internall('Пользователь не найден !'))
+      
+    }
+    // проверка пароля
+    const comparePassword = bcrypt.compareSync(password, user.password)
+    if (!comparePassword) {
+      return next(apiError.internall('Указан не верный пароль!'))
+    }
+    const token = genirateJwt( user.id, user.email, user.role)
+    return res.json({token})
 
     };
    async auth  (req, res, next){
-       const {id} = req.query
-     if (!id) {
-       return next(apiError.badRequest('Не задан ID'))
-     }
-      return res.json(id)
+       
 
-    }
+}
 }
 module.exports = new UserController()
