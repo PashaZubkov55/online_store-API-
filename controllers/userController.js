@@ -48,6 +48,8 @@ class UserController{
 
     };
    async auth  (req, res, next){
+     const token =  genirateJwt(req.user.id, req.user.email, req.user.role)
+     return   res.json({token})
        
 
 }
